@@ -1,16 +1,27 @@
 import { ROUTES } from "@constants/route"
 import { CookiesService } from "@helpers/cookies"
-import { Link } from "react-router-dom"
+import { jwtDecode } from "jwt-decode"
+import { Link, useNavigate } from "react-router-dom"
 import { Outlet } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const MainLayout = () => {
+    const navigate = useNavigate()
 
     //#region Cookies
     const isUser = CookiesService.get()
     const handleLogout = () => {
         CookiesService.remove()
+        navigate(ROUTES.AUTH.LOGIN)
+        toast.success("Đăng xuất thành công")
     }
     //#endregion
+
+    const token = CookiesService.get()
+    let id: string | undefined
+    if (token) {
+        id = jwtDecode<GLOBAL.IJWTPayload>(token)._id
+    }
 
     return (
         <div className="min-h-screen bg-[#fffcf8]">
@@ -36,7 +47,7 @@ const MainLayout = () => {
                         </Link>
                     ) : (
                         <div className="flex items-center space-x-6">
-                            <Link to={ROUTES.PUBLIC.PROFILE} className="text-[#5a483e] hover:text-[#a67c52] transition-colors">
+                            <Link to={id ? ROUTES.PUBLIC.PROFILE.replace(":id", id) : "#"} className="text-[#5a483e] hover:text-[#a67c52] transition-colors">
                                 Setting
                             </Link>
                             <button onClick={handleLogout} className="cursor-pointer text-[#a67c52] hover:text-[#8a5a2b] transition-colors">

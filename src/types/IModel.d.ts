@@ -1,12 +1,14 @@
 declare namespace MODELS {
     export interface IUser {
         _id?: string;
-        email: string;
-        password: string;
+        email?: string;
+        password?: string;
         name?: string;
         YOB?: number;
         gender?: string;
         isAdmin?: boolean;
+        createdAt?: string;
+        updatedAt?: string;
     }
 
     export interface IPerfume {
@@ -27,7 +29,7 @@ declare namespace MODELS {
         _id: string;
         rating: number;
         content: string;
-        author: string;
+        author: IUser;
         createAt: string;
     }
 

@@ -13,11 +13,14 @@ const PUBLIC = {
     HOME: '/',
     DETAILPRODUCT: '/detail-product/:id',
     CATEGORY: '/category',
-    PROFILE: '/profile',
+    PROFILE: '/profile/:id',
 }
 
 const ADMIN = {
     DASHBOARD: '/admin',
+    PERFUMES: '/admin/perfumes',
+    BRANDS: '/admin/brands',
+    COLLECTORS: '/admin/collectors',
 };
 
 const ROLE = {

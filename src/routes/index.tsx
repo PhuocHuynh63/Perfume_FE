@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { ROUTES } from "@constants/route";
 import PrivateRoute from "./Auth/PrivateProute";
-import { ROLE } from "@constants/common";
 import PersistToken from "./Auth/PersistToken";
 import PerfumeLogin from "@pages/Auth/LoginPage";
 import HomePage from "@pages/HomePage";
@@ -11,6 +10,9 @@ import RegisterPage from "@pages/Auth/RegisterPage";
 import NotFoundPage from "@pages/NotFound";
 import MainLayout from "@layouts/Main";
 import ProfilePage from "@pages/ProfilePage";
+import AdminPerfumePage from "@pages/Admin/Perfumes";
+import AdminBrandPage from "@pages/Admin/Brands";
+import AdminMemberPage from "@pages/Admin/Members";
 
 const RouterComponent = () => {
     const router = createBrowserRouter([
@@ -40,21 +42,24 @@ const RouterComponent = () => {
         { path: ROUTES.PUBLIC.CATEGORY, element: <CategoryPage /> },
         //#endregion
 
-        // //#region Private routes
+        //#region Private routes
         {
             element: <PersistToken />,
             children: [
-                //#region Admnin routes
+                //#region Admin routes
                 {
-                    element: <PrivateRoute allowedRoles={[ROLE.ADMIN]} />,
+                    element: <PrivateRoute />,
                     children: [
+                        { path: ROUTES.ADMIN.PERFUMES, element: <AdminPerfumePage /> },
+                        { path: ROUTES.ADMIN.BRANDS, element: <AdminBrandPage /> },
+                        { path: ROUTES.ADMIN.COLLECTORS, element: <AdminMemberPage /> }
                     ],
                 },
                 //#endregion
 
                 //#region Member routes
                 {
-                    element: <PrivateRoute allowedRoles={[ROLE.ADMIN]} />,
+                    element: <PrivateRoute />,
                     children: [
                     ],
                 },

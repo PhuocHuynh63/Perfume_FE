@@ -3,6 +3,8 @@ import brandService from "@services/brand"
 import perfumeService from "@services/perfumes"
 import { useEffect, useState, useCallback } from "react"
 import { Link } from "react-router-dom"
+import { Droplets } from "lucide-react"
+
 
 const HomePage = () => {
     const [loading, setLoading] = useState(true)
@@ -17,7 +19,7 @@ const HomePage = () => {
 
     //#region Brands
     const [brands, setBrands] = useState<MODELS.IBrand[]>([])
-    const [selectedBrand, setSelectedBrand] = useState<string | ''>('')
+    const [selectedBrand, setSelectedBrand] = useState<string | "">("")
 
     useEffect(() => {
         brandService
@@ -30,7 +32,7 @@ const HomePage = () => {
 
     const handleBrandSelect = (brandId: string) => {
         if (selectedBrand === brandId) {
-            setSelectedBrand('')
+            setSelectedBrand("")
         } else {
             setSelectedBrand(brandId)
         }
@@ -92,7 +94,7 @@ const HomePage = () => {
                         ))}
                         {selectedBrand && (
                             <button
-                                onClick={() => setSelectedBrand('')}
+                                onClick={() => setSelectedBrand("")}
                                 className="px-4 py-2 rounded-md bg-[#f8f3e9] text-[#a67c52] border border-[#a67c52] hover:bg-[#a67c52]/10"
                             >
                                 Xóa bộ lọc
@@ -126,19 +128,45 @@ const HomePage = () => {
                                 <Link
                                     to={item._id ? ROUTES.PUBLIC.DETAILPRODUCT.replace(":id", item._id) : "#"}
                                     key={item._id}
-                                    className="bg-[#f8f3e9] rounded-lg p-6 shadow-md transition-transform hover:scale-105"
+                                    className="bg-[#f8f3e9] rounded-lg p-6 shadow-md transition-transform hover:scale-105 relative overflow-hidden group"
                                 >
-                                    <div className="relative h-64 mb-4 flex justify-center">
+                                    {/* Concentration Badge */}
+                                    {item.concentration === "Extrait" && (
+                                        <div
+                                            className={`absolute top-6 right-6 z-10 px-3 py-1.5 rounded-full text-white text-xs font-bold shadow-lg border bg-gradient-to-r from-amber-500 to-amber-700 border-amber-600 transform transition-transform duration-300 group-hover:scale-110`}
+                                        >
+                                            <div className="flex items-center gap-1">
+                                                <span>{item.concentration}</span>
+                                                <div className="flex ml-1">
+                                                    {item.concentration === "Extrait" &&
+                                                        <Droplets size={12} className="fill-white text-white" />
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="relative h-64 mb-4 flex justify-center z-1">
                                         <img
                                             src={item.uri || "/placeholder.svg"}
                                             alt={`Nước hoa ${item.perfumeName}`}
                                             className="rounded-md w-64 object-cover"
                                         />
+
+                                        {/* Premium Badge for Extrait */}
+                                        {item.concentration === "Extrait" && (
+                                            <div className="absolute -top-3 -left-3 bg-amber-500 text-white text-xs font-bold py-1 px-2 rounded-br-lg shadow-md transform -rotate-12">
+                                                PREMIUM
+                                            </div>
+                                        )}
                                     </div>
-                                    <h3 className="text-xl font-serif text-[#3a2a21] mb-2">{item.perfumeName}</h3>
-                                    <p className="text-[#5a483e] mb-4">Sự kết hợp tinh tế của hương hoa và gỗ.</p>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-[#a67c52] font-semibold">2.999.000 ₫</span>
+
+                                    <h3 className="text-xl font-serif text-[#3a2a21] mb-2 relative z-10">{item.perfumeName}</h3>
+
+                                    <p className="text-[#5a483e] mb-4 relative z-10 line-clamp-2">{item.description}</p>
+
+                                    <div className="flex justify-between items-center relative z-10">
+                                        <span className="text-[#a67c52] font-semibold">${item.price.toLocaleString("vi-VN")}</span>
                                         <button className="border border-[#a67c52] text-[#a67c52] px-4 py-2 rounded-md hover:bg-[#a67c52] hover:text-white transition-colors">
                                             Thêm vào giỏ
                                         </button>
@@ -147,6 +175,56 @@ const HomePage = () => {
                             ))}
                         </div>
                     )}
+                </div>
+            </section>
+
+            {/* Concentration Guide Section */}
+            <section className="py-12 bg-[#f8f3e9]">
+                <div className="container mx-auto px-4">
+                    <h2 className="text-3xl font-serif text-center text-[#3a2a21] mb-8">Hướng dẫn nồng độ nước hoa</h2>
+                    <p className="text-center text-[#5a483e] mb-10 max-w-3xl mx-auto">
+                        Nồng độ nước hoa quyết định độ lưu hương và cường độ mùi. Từ Eau Fraiche đến Extrait, mỗi loại có đặc điểm
+                        riêng.
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* <div className="bg-white p-6 rounded-lg shadow-md">
+                            <h3 className="text-xl font-serif text-[#3a2a21] mb-3 flex items-center">
+                                <span className={`inline-block w-3 h-3 rounded-full mr-2 ${getConcentrationColor("Extrait")}`}></span>
+                                Extrait (Pure Perfume)
+                            </h3>
+                            <p className="text-[#5a483e]">
+                                Nồng độ cao nhất (20-40%), lưu hương 8-12 giờ. Đây là loại nước hoa cao cấp nhất, mang lại trải nghiệm
+                                hương thơm sâu sắc và lâu dài.
+                            </p>
+                        </div> */}
+
+                        {/* <div className="bg-white p-6 rounded-lg shadow-md">
+                            <h3 className="text-xl font-serif text-[#3a2a21] mb-3 flex items-center">
+                                <span
+                                    className={`inline-block w-3 h-3 rounded-full mr-2 ${getConcentrationColor("Eau de Parfum")}`}
+                                ></span>
+                                Eau de Parfum (EDP)
+                            </h3>
+                            <p className="text-[#5a483e]">
+                                Nồng độ 15-20%, lưu hương 5-8 giờ. Phổ biến và cân bằng giữa độ lưu hương và giá cả, phù hợp cho sử dụng
+                                hàng ngày.
+                            </p>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-lg shadow-md">
+                            <h3 className="text-xl font-serif text-[#3a2a21] mb-3 flex items-center">
+                                <span
+                                    className={`inline-block w-3 h-3 rounded-full mr-2 ${getConcentrationColor("Eau de Toilette")}`}
+                                ></span>
+                                Eau de Toilette (EDT)
+                            </h3>
+                            <p className="text-[#5a483e]">
+                                Nồng độ 5-15%, lưu hương 3-5 giờ. Nhẹ nhàng và tươi mát, thích hợp cho thời tiết ấm áp và sử dụng hàng
+                                ngày.
+                            </p>
+                        </div> */}
+                    </div>
                 </div>
             </section>
         </div>

@@ -3,10 +3,13 @@
  * @param dateStr 
  * @returns day/month/year
  */
-export const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const month = date.toLocaleString("en-US", { month: "2-digit" });
-    const year = date.getUTCFullYear();
-    return `${day}/${month}/${year} `;
-};
+export const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    }).format(date)
+}
